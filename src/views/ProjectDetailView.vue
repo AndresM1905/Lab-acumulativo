@@ -1,7 +1,7 @@
 <!-- src/views/ProjectDetailView.vue -->
 <template>
     <div class="max-w-3xl mx-auto space-y-6">
-      <!-- 🔙 Botón de regreso -->
+      <!-- 🔙 Regresar -->
       <RouterLink
         to="/"
         class="btn btn-sm btn-ghost hover:bg-base-200 flex items-center gap-1"
@@ -11,6 +11,7 @@
   
       <!-- Si el proyecto existe -->
       <div v-if="project">
+        <!-- Encabezado -->
         <h2 class="text-3xl font-bold flex items-center gap-3 mt-2">
           📁 {{ project.name }}
           <span class="text-sm font-normal text-gray-400">
@@ -18,7 +19,7 @@
           </span>
         </h2>
   
-        <!-- Barra de progreso -->
+        <!-- Progreso -->
         <progress
           class="progress progress-info w-full"
           :value="completed"
@@ -60,6 +61,16 @@
             />
           </li>
         </ul>
+  
+        <!-- ➕ Formulario para nueva tarea -->
+        <form @submit.prevent="addNewTask" class="flex items-center gap-2 mt-5">
+          <input
+            v-model="newTaskTitle"
+            class="input input-sm input-bordered flex-1"
+            placeholder="Nueva tarea..."
+          />
+          <button type="submit" class="btn btn-sm btn-primary">Añadir</button>
+        </form>
       </div>
   
       <!-- Si NO existe el proyecto -->
@@ -114,6 +125,17 @@
       store.updateTaskTitle(project.value.id, task.id, nuevo)
     }
     editingId.value = null
+  }
+  
+  /* ---------- nueva tarea ---------- */
+  const newTaskTitle = ref('')
+  
+  function addNewTask() {
+    const title = newTaskTitle.value.trim()
+    if (title && project.value) {
+      store.addTask(project.value.id, title)
+      newTaskTitle.value = ''
+    }
   }
   </script>
   

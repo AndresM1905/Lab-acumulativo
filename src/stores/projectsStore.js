@@ -35,6 +35,7 @@ export const useProjectsStore = defineStore('projects', {
   },
 
   actions: {
+    /* ---------- tareas ---------- */
     toggleTask(projectId, taskId) {
       const proj = this.projects.find(p => p.id === projectId)
       const task = proj?.tasks.find(t => t.id === taskId)
@@ -47,6 +48,15 @@ export const useProjectsStore = defineStore('projects', {
       if (task) task.title = newTitle
     },
 
+    /** Agrega una nueva tarea a un proyecto */
+    addTask(projectId, title) {
+      const proj = this.projects.find(p => p.id === projectId)
+      if (!proj) return
+      const newId = `${projectId}-${Date.now()}`
+      proj.tasks.push({ id: newId, title, done: false })
+    },
+
+    /* ---------- proyectos ---------- */
     addProject({ name, tasks = [] }) {
       const idRaw = Date.now()
       this.projects.push({
