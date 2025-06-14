@@ -43,7 +43,7 @@
           ></textarea>
         </div>
 
-        <!-- Acciones -->
+       
         <div class="modal-action">
           <button
             type="button"
@@ -85,13 +85,13 @@ const emit = defineEmits(['close','save'])
 const localForm = ref({ id: null, name: '' })
 const tasksText = ref('')
 
-// Función para limpiar el formulario
+
 function resetForm() {
   localForm.value = { id: null, name: '' }
   tasksText.value = ''
 }
 
-// Al cambiar proyecto cargamos datos (o limpiamos)
+
 watch(
   () => props.project,
   (p) => {
@@ -105,7 +105,7 @@ watch(
   { immediate: true }
 )
 
-// Mostrar/ocultar dialog y limpiar al abrir en modo creación
+
 watch(
   () => props.show,
   (val) => {
@@ -113,7 +113,7 @@ watch(
     if (!modal) return
 
     if (val) {
-      // Si abrimos en creación, reiniciamos el form
+  
       if (!props.isEditing) resetForm()
       modal.showModal()
     } else {
@@ -122,10 +122,10 @@ watch(
   }
 )
 
-// Validación
+
 const isFormValid = computed(() => localForm.value.name.trim().length > 0)
 
-// Emitir save
+
 function submitForm() {
   if (!isFormValid.value) return
 
@@ -142,7 +142,7 @@ function submitForm() {
   })
 }
 
-// Emitir close
+
 function handleClose() {
   emit('close')
 }

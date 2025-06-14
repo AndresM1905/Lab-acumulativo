@@ -1,4 +1,4 @@
-// src/stores/projectsStore.js
+
 import { defineStore } from 'pinia'
 
 export const useProjectsStore = defineStore('projects', {
@@ -48,7 +48,7 @@ export const useProjectsStore = defineStore('projects', {
       if (task) task.title = newTitle
     },
 
-    /** Agrega una nueva tarea a un proyecto */
+   
     addTask(projectId, title) {
       const proj = this.projects.find(p => p.id === projectId)
       if (!proj) return

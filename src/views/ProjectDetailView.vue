@@ -1,7 +1,7 @@
 <!-- src/views/ProjectDetailView.vue -->
 <template>
     <div class="max-w-3xl mx-auto space-y-6">
-      <!-- 🔙 Regresar -->
+  
       <RouterLink
         to="/"
         class="btn btn-sm btn-ghost hover:bg-base-200 flex items-center gap-1"
@@ -34,7 +34,7 @@
             :key="task.id"
             class="flex items-center gap-3"
           >
-            <!-- check -->
+      
             <input
               type="checkbox"
               class="checkbox checkbox-sm"
@@ -42,7 +42,7 @@
               @change="store.toggleTask(project.id, task.id)"
             />
   
-            <!-- título editable -->
+          
             <span
               v-if="editingId !== task.id"
               @click="startEdit(task)"
@@ -62,7 +62,7 @@
           </li>
         </ul>
   
-        <!-- ➕ Formulario para nueva tarea -->
+    
         <form @submit.prevent="addNewTask" class="flex items-center gap-2 mt-5">
           <input
             v-model="newTaskTitle"
@@ -73,7 +73,7 @@
         </form>
       </div>
   
-      <!-- Si NO existe el proyecto -->
+   
       <div v-else class="text-center text-error text-xl font-semibold mt-10">
         Proyecto no encontrado
       </div>
@@ -110,7 +110,7 @@
     total.value > 0 ? Math.round((completed.value / total.value) * 100) : 0
   )
   
-  /* ---------- edición de título ---------- */
+ 
   const editingId   = ref(null)
   const editedTitle = ref('')
   
@@ -127,7 +127,7 @@
     editingId.value = null
   }
   
-  /* ---------- nueva tarea ---------- */
+ 
   const newTaskTitle = ref('')
   
   function addNewTask() {

@@ -1,9 +1,9 @@
 <template>
   <div class="flex min-h-screen">
-    <!-- ÚNICA instancia del sidebar -->
+
     <SideBar />
 
-    <!-- Aquí se renderiza cada vista (HomeView, etc.) -->
+  
     <main class="flex-1 bg-base-100 p-6 overflow-auto">
       <slot />
     </main>
