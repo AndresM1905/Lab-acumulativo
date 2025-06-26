@@ -22,7 +22,21 @@
             :key="project.id"
           >
             <td class="text-center">{{ index + 1 }}</td>
-            <td>{{ project.name }}</td>
+            <td>
+             
+              <div v-if="editingProjectId !== project.id" @dblclick="startProjectEdit(project)" class="cursor-pointer">
+                {{ project.name }}
+              </div>
+              <input 
+                v-else
+                v-model="editedProjectName" 
+                @keyup.enter="saveProjectName(project)"
+                @blur="saveProjectName(project)"
+                class="input input-sm input-bordered w-full"
+                ref="projectNameInput"
+                autofocus
+              />
+            </td>
             <td class="text-center">{{ project.tasks.length }} tarea(s)</td>
             <td class="text-center">
               <div class="flex items-center gap-2 justify-center">
@@ -95,12 +109,20 @@
 <script setup>
 import { ref } from 'vue'
 import { useProjectsStore } from '@/stores/projectsStore'
+import { useRouter } from 'vue-router'
 import ProjectModal from '@/components/ProjectModal.vue'
+
+const router = useRouter()
 
 const projectsStore   = useProjectsStore()
 const modalVisible    = ref(false)
 const isEditing       = ref(false)
 const selectedProject = ref(null)
+
+// For inline editing of project names
+const editingProjectId = ref(null)
+const editedProjectName = ref('')
+const projectNameInput = ref(null)
 
 function openModal() {
   isEditing.value = false
@@ -132,6 +154,37 @@ function saveProject(payload) {
     projectsStore.addProject(payload)
   }
   closeModal()
+}
+
+// Functions for inline editing project names
+function startProjectEdit(project) {
+  editingProjectId.value = project.id
+  editedProjectName.value = project.name
+  // Focus on the input when it appears
+  setTimeout(() => {
+    if (projectNameInput.value) {
+      projectNameInput.value.focus()
+    }
+  }, 10)
+}
+
+function saveProjectName(project) {
+  const newName = editedProjectName.value.trim()
+  if (newName && newName !== project.name) {
+    projectsStore.updateProject({
+      id: project.id,
+      name: newName,
+      tasks: project.tasks
+    })
+  }
+  editingProjectId.value = null
+}
+
+// Función para navegar a la vista detallada del proyecto
+function goToProjectDetail(projectId) {
+  // Evitar navegación si estamos editando (doble clic)
+  if (editingProjectId.value !== null) return
+  router.push(`/project/${projectId}`)
 }
 
 function pctDone(projectId) {

@@ -1,9 +1,21 @@
 
 import { defineStore } from 'pinia'
 
+// Load data from localStorage on initialization
+const loadProjects = () => {
+  try {
+    const saved = localStorage.getItem('projects')
+    return saved ? JSON.parse(saved) : null
+  } catch (e) {
+    console.error('Error loading projects from localStorage:', e)
+    return null
+  }
+}
+
 export const useProjectsStore = defineStore('projects', {
   state: () => ({
-    projects: [
+    // Load projects from localStorage or use defaults if none exist
+    projects: loadProjects() || [
       {
         id: 1,
         name: 'Proyecto Alpha',
@@ -40,12 +52,14 @@ export const useProjectsStore = defineStore('projects', {
       const proj = this.projects.find(p => p.id === projectId)
       const task = proj?.tasks.find(t => t.id === taskId)
       if (task) task.done = !task.done
+      this.saveToLocalStorage()
     },
 
     updateTaskTitle(projectId, taskId, newTitle) {
       const proj = this.projects.find(p => p.id === projectId)
       const task = proj?.tasks.find(t => t.id === taskId)
       if (task) task.title = newTitle
+      this.saveToLocalStorage()
     },
 
    
@@ -54,6 +68,14 @@ export const useProjectsStore = defineStore('projects', {
       if (!proj) return
       const newId = `${projectId}-${Date.now()}`
       proj.tasks.push({ id: newId, title, done: false })
+      this.saveToLocalStorage()
+    },
+    
+    deleteTask(projectId, taskId) {
+      const proj = this.projects.find(p => p.id === projectId)
+      if (!proj) return
+      proj.tasks = proj.tasks.filter(t => t.id !== taskId)
+      this.saveToLocalStorage()
     },
 
     /* ---------- proyectos ---------- */
@@ -68,6 +90,7 @@ export const useProjectsStore = defineStore('projects', {
           done:  false
         }))
       })
+      this.saveToLocalStorage()
     },
 
     updateProject({ id, name, tasks }) {
@@ -87,10 +110,21 @@ export const useProjectsStore = defineStore('projects', {
           }
         })
       }
+      this.saveToLocalStorage()
     },
 
     deleteProject(projectId) {
       this.projects = this.projects.filter(p => p.id !== projectId)
+      this.saveToLocalStorage()
+    },
+
+    // Save all projects to localStorage
+    saveToLocalStorage() {
+      try {
+        localStorage.setItem('projects', JSON.stringify(this.projects))
+      } catch (e) {
+        console.error('Error saving to localStorage:', e)
+      }
     }
   }
 })
